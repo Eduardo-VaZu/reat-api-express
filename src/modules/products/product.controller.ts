@@ -9,13 +9,16 @@ export const productController = {
             const parsed = createProductSchema.safeParse(req.body);
 
             if (!parsed.success) {
-                res.status(400).json({ error: "Invalid request", details: parsed.error });
+                res.status(400).json({
+                    error: "Invalid request",
+                    details: parsed.error
+                });
                 return;
             }
 
             const data: Omit<Prisma.ProductCreateInput, "createdAt" | "updatedAt"> = {
                 name: parsed.data.name ?? null,
-                price: new Prisma.Decimal(parsed.data.price),
+                price: parsed.data.price,
             };
 
             const product = await productService.createProduct(data);
@@ -23,7 +26,9 @@ export const productController = {
 
         } catch (error) {
             const message = error instanceof Error ? error.message : "Internal server error";
-            res.status(500).json({ error: message });
+            res.status(500).json({
+                error: message
+            });
         }
 
     },
@@ -33,7 +38,9 @@ export const productController = {
             res.status(200).json(products);
         } catch (error) {
             const message = error instanceof Error ? error.message : "Internal server error";
-            res.status(500).json({ error: message });
+            res.status(500).json({
+                error: message
+            });
         }
     },
 

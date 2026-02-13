@@ -88,7 +88,7 @@ export const productController = {
                 success: true
             });
 
-        } catch (error: unknown) {
+        } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 switch (error.code) {
                     case "P2002":
@@ -125,7 +125,7 @@ export const productController = {
                 message: "Product availability updated successfully",
                 success: true
             });
-        } catch (error: unknown) {
+        } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 switch (error.code) {
                     case "P2025":
@@ -158,7 +158,7 @@ export const productController = {
                 message: "Product deleted successfully",
                 success: true
             });
-        } catch (error: unknown) {
+        } catch (error) {
             if (error instanceof Prisma.PrismaClientKnownRequestError) {
                 switch (error.code) {
                     case "P2025":

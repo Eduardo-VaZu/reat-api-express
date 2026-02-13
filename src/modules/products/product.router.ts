@@ -118,4 +118,27 @@ router.put("/:id", idParamValidator, updateProductValidator, validate, productCo
  */
 router.put("/availability/:id", idParamValidator, availabilityProductValidator, validate, productController.availabilityProduct);
 
+/**
+ * @swagger
+ * /product/{id}:
+ *  delete:
+ *    summary: Eliminar un producto por ID
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        required: true
+ *        schema:
+ *          type: integer
+ *    responses:
+ *      200:
+ *        description: Producto eliminado exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Product'
+ */
+router.delete("/:id", idParamValidator, validate, productController.deleteProduct);
+
+
+
 export default router;

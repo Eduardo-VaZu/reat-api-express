@@ -6,7 +6,7 @@ export const productController = {
     createProduct: async (req: Request, res: Response) => {
         try {
 
-            const data : Prisma.ProductCreateInput = {
+            const data: Prisma.ProductCreateInput = {
                 name: req.body.name ?? null,
                 price: new Prisma.Decimal(req.body.price),
             };
@@ -36,7 +36,7 @@ export const productController = {
         }
 
     },
-    
+
     getProducts: async (req: Request, res: Response) => {
         try {
             const products = await productService.getProducts();
@@ -51,7 +51,7 @@ export const productController = {
         }
     },
 
-    getProductById: async(req: Request, res:Response)=>{
+    getProductById: async (req: Request, res: Response) => {
         try {
             const productId = Number(req.params.id);
             const product = await productService.getProductById(productId);
@@ -65,12 +65,12 @@ export const productController = {
                 message: "Product retrieved successfully",
                 product: productDTO
             });
-            
+
         } catch (error) {
             res.status(500).json({ error: "Internal server error" });
         }
     },
-    
+
     updateProduct: async (req: Request, res: Response) => {
         try {
             const id = Number(req.params.id);
@@ -139,4 +139,37 @@ export const productController = {
             res.status(500).json({ error: "Internal server error" });
         }
     },
+
+    deleteProduct: async (req: Request, res: Response) => {
+        try {
+            const idStr = req.params.id;
+
+            if (!idStr || !Number.isFinite(Number(idStr))) {
+                res.status(400).json({
+                    error: "Invalid id"
+                });
+                return;
+            }
+
+            const id = Number(idStr);
+            const product = await productService.deleteProduct(id);
+            res.status(200).json({
+                product,
+                message: "Product deleted successfully",
+                success: true
+            });
+        } catch (error: unknown) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError) {
+                switch (error.code) {
+                    case "P2025":
+                        res.status(404).json({ error: "Product not found" });
+                        return;
+                    case "P2003":
+                        res.status(409).json({ error: "Foreign key constraint failed" });
+                        return;
+                }
+            }
+            res.status(500).json({ error: "Internal server error" });
+        }
+    }
 }

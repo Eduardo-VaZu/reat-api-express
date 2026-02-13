@@ -19,8 +19,8 @@ export const productService = {
     },
     getProducts: async () => {
         const products = await prisma.product.findMany({
-            where: {
-                availability: true,
+            orderBy: {
+                id: "asc",
             }
         });
         return products;
@@ -45,7 +45,17 @@ export const productService = {
             data: { availability },
         });
         return updated;
-
-
     },
+    deleteProduct: async (id: number) => {
+        const product = await prisma.product.findUnique({
+            where: { id },
+        });
+        if (!product) {
+            throw new Error("Product not found");
+        }
+        const deleted = await prisma.product.delete({
+            where: { id },
+        });
+        return deleted;
+    }
 }
